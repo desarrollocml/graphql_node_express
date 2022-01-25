@@ -3,8 +3,8 @@ const app = express();
 
 //data
 
-import { createRequire } from 'module';
-const require = createRequire(import.meta.url);//para poder usar require
+import { createRequire } from "module";
+const require = createRequire(import.meta.url); //para poder usar require
 
 const { courses } = require("./data.json");
 //console.log(courses);
@@ -15,17 +15,30 @@ import { graphqlHTTP } from "express-graphql";
 import bSchema from "graphql"; //CommonJS module
 const { buildSchema } = bSchema;
 
-
-
 //Schema de GraphQl
+//courses(topic:String):[Course]
 const schema = buildSchema(`
     type Query {
-        message: String
+        course(id:Int!):Course
+        
+    },
+    type Course {
+        id: Int
+        title: String
+        author: String
+        description: String
+        topic: String
+        url: String
     }
 `);
 
+let getCourse = (args) => {
+  let id = args.id;
+  return courses.filter(course => course.id = id )[0];
+};
+
 const root = {
-  message: () => "Hola Mundo 2",
+  course: getCourse,
 };
 //endpoint de graphql
 app.use(
