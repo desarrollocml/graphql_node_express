@@ -1,10 +1,21 @@
 import express from "express";
 const app = express();
 
+//data
+
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);//para poder usar require
+
+const { courses } = require("./data.json");
+//console.log(courses);
+
+//middleware para express
 import { graphqlHTTP } from "express-graphql";
 
-import bSchema from "graphql";//CommonJS module
+import bSchema from "graphql"; //CommonJS module
 const { buildSchema } = bSchema;
+
+
 
 //Schema de GraphQl
 const schema = buildSchema(`
