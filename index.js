@@ -20,6 +20,7 @@ const { buildSchema } = bSchema;
 const schema = buildSchema(`
     type Query {
         course(id:Int!):Course
+        courses(topic: String!):[Course]
         
     },
     type Course {
@@ -34,11 +35,53 @@ const schema = buildSchema(`
 
 let getCourse = (args) => {
   let id = args.id;
-  return courses.filter(course => course.id = id )[0];
+  return courses.filter((course) => (course.id = id))[0];
 };
+/* 
+query getSingleCourse($courseID:Int!){
+  course(id:$courseID){
+    title
+    author
+    description
+    topic
+    url
+  }
+}
+//----query variables
+{
+  "courseID": 1
+}
+*/
+
+let getCourses = (args) => {
+  if (args.topic) {
+    let topic = args.topic;
+    return courses.filter((course) => course.topic === topic);
+  } else {
+    return courses;
+  }
+};
+/* 
+query getCourses(
+  $courseTopic:String!)
+  {
+  courses(topic:$courseTopic){
+    id
+    title
+    topic
+    url
+  }
+}
+//----
+{
+  "courseTopic": "Javascript"
+}
+ */
+
 
 const root = {
   course: getCourse,
+  courses: getCourses,
 };
 //endpoint de graphql
 app.use(
